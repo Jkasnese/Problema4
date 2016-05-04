@@ -136,4 +136,8 @@ public class Controller {
 		
 	}
 	
+	public ArrayList<Ponto> getListaPontos(){
+		return listaPontos;
+	}
+	
 }
