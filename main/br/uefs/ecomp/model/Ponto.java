@@ -9,6 +9,7 @@ public class Ponto {
 	
 	public Ponto(String nomeDoLocal){
 		this.nomeDoLocal = nomeDoLocal;
+		listaArestas = new ArrayList<Aresta>();
 	}
 	
 	public String getNomeDoLocal() {

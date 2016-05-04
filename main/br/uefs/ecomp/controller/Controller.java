@@ -9,7 +9,7 @@ import br.uefs.ecomp.model.Ponto;
 
 public class Controller {
 
-	private ArrayList<Ponto> listaPontos;
+	private ArrayList<Ponto> listaPontos = new ArrayList<Ponto>();
 	
 	
 	public Ponto cadastrarPonto(String nomeDoLocal){
