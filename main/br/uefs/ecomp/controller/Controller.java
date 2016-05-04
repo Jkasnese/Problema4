@@ -3,12 +3,45 @@ package br.uefs.ecomp.controller;
 import java.util.ArrayList;
 
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
+import br.uefs.ecomp.model.Aresta;
 import br.uefs.ecomp.model.Grafo;
 import br.uefs.ecomp.model.Ponto;
 
 public class Controller {
 
 	private ArrayList<Ponto> listaPontos;
+	
+	
+	public Ponto cadastrarPonto(String nomeDoLocal){
+		
+		Ponto novoPonto = new Ponto(nomeDoLocal);
+		
+		listaPontos.add(novoPonto);
+		
+		return novoPonto;
+	}
+	
+	
+	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao) throws PontoNaoExistenteException{
+	
+		// Caso os pontos escolhidos não estejam cadastrados, lança exceção
+		if(!listaPontos.contains(pontoInicial))
+			throw new PontoNaoExistenteException("Ponto inicial escolhido não foi cadastrado");
+		else if(!listaPontos.contains(pontoFinal))
+			throw new PontoNaoExistenteException("Ponto final escolhido não foi cadastrado");
+		
+		else{
+				// Cria duas novas arestas. A primeira terá seu ponto seguinte como o ponto inicial
+			 	// e a segunda tem seu ponto seguinte como o ponto final, já que o grafo não é direcionado
+				Aresta novaAresta1 = new Aresta(pontoFinal, duracao);
+				Aresta novaAresta2 = new Aresta(pontoInicial, duracao);
+				
+				// Adiciona as arestas às listas de arestas dos seus respectivos pontos 
+				pontoInicial.getListaArestas().add(novaAresta1);
+				pontoFinal.getListaArestas().add(novaAresta2);
+		}
+	
+	}
 	
 	
 	public void calcularRota(ArrayList<Ponto> listaPontos, Ponto pontoInicial, Ponto pontoFinal) throws PontoNaoExistenteException{

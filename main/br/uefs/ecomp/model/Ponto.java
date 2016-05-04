@@ -7,7 +7,9 @@ public class Ponto {
 	private String nomeDoLocal;
 	private ArrayList<Aresta> listaArestas;
 	
-	
+	public Ponto(String nomeDoLocal){
+		this.nomeDoLocal = nomeDoLocal;
+	}
 	
 	public String getNomeDoLocal() {
 		return nomeDoLocal;

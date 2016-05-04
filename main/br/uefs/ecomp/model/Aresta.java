@@ -5,11 +5,11 @@ public class Aresta {
 	private Ponto pontoSeguinte;
 	private int duracao;
 
-	private Aresta(Ponto pontoSeguinte, int duracao){
+	public Aresta(Ponto pontoSeguinte, int duracao){
 		this.pontoSeguinte = pontoSeguinte;
 		this.duracao = duracao;
 	}
-
+	
 	public Ponto getPontoSeguinte() {
 		return pontoSeguinte;
 	}
