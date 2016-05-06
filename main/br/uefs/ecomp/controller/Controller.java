@@ -1,6 +1,7 @@
 package br.uefs.ecomp.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
 import br.uefs.ecomp.model.Aresta;
@@ -43,6 +44,50 @@ public class Controller {
 	
 	}
 	
+	public void removerPonto(Ponto ponto){
+		
+		Iterator<Aresta> itera = ponto.getListaArestas().iterator();
+		
+		while(itera.hasNext()){
+			
+			Aresta aresta = itera.next();
+			Ponto pontoSeguinte = aresta.getPontoSeguinte();
+			
+			removerAresta(ponto, pontoSeguinte);
+		}
+		
+		listaPontos.remove(ponto);
+		
+	}
+	
+	public void removerAresta(Ponto pontoA, Ponto pontoB){
+		
+		Iterator<Aresta> itera = pontoA.getListaArestas().iterator();
+		
+		while(itera.hasNext())
+		{
+			Aresta aresta = itera.next();
+			if(aresta.getPontoSeguinte().equals(pontoB))
+			{
+				pontoA.getListaArestas().remove(aresta);
+				break;
+			}
+				
+		}
+		
+		itera = pontoB.getListaArestas().iterator();
+		
+		while(itera.hasNext())
+		{
+			Aresta aresta = itera.next();
+			if(aresta.getPontoSeguinte().equals(pontoA))
+			{
+				pontoB.getListaArestas().remove(aresta);
+				break;
+			}
+				
+		}
+	}
 	
 	public int calcularRota(ArrayList<Ponto> listaPontos, Ponto pontoInicial, Ponto pontoFinal) throws PontoNaoExistenteException{
 		
