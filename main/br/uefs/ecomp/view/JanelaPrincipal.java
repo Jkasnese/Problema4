@@ -50,6 +50,7 @@ public class JanelaPrincipal extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
+		setTitle("Buscador de Rota");
 		
 		JPanel painelBotoes = new JPanel();
 		
@@ -81,6 +82,8 @@ public class JanelaPrincipal extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
+				JOptionPane.showMessageDialog(painelGrafo, "Clique na tela para cadastrar um ponto");
+				
 				MouseAdapter cliqueCadastro = new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
@@ -88,15 +91,17 @@ public class JanelaPrincipal extends JFrame {
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
 						
 						controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+						
+						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
 			};
 				painelGrafo.addMouseListener(cliqueCadastro);
 			}
 	
 		});
-	
-		
 		painelBotoes.add(btnCadastrarPonto);
+		
+		
 		
 		JButton btnCadastrarAresta = new JButton("Cadastrar Aresta");
 		painelBotoes.add(btnCadastrarAresta);

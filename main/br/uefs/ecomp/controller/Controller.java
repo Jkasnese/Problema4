@@ -51,7 +51,7 @@ public class Controller {
 		while(itera.hasNext()){
 			
 			// Econtra o ponto seguinte de cada aresta da lista e 
-			// chama o método de remoção de arestas, passando os vértices da
+			// chama o mï¿½todo de remoï¿½ï¿½o de arestas, passando os vï¿½rtices da
 			// aresta a ser removida
 			Aresta aresta = itera.next();
 			Ponto pontoSeguinte = aresta.getPontoSeguinte();
@@ -132,11 +132,6 @@ public class Controller {
 			for (int j=0; j<NUMERO_DE_PONTOS; j++){
 				if(matriz[i][j] == 0)
 					matriz[i][j] = VALOR_MAXIMO; 
-//				// TESTANDO
-//				System.out.print(matriz[i][j] + " ");
-//				if (j == NUMERO_DE_PONTOS){
-//					System.out.println(" ");
-//				}
 			}
 		}
 		
