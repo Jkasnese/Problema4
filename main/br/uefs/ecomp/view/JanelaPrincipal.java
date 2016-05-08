@@ -1,6 +1,7 @@
 package br.uefs.ecomp.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -17,16 +19,14 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
-import br.uefs.ecomp.model.Ponto;
+import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
+import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 
 public class JanelaPrincipal extends JFrame {
 
-	ArrayList<String> listaNomePontos = new ArrayList<String>();
-	
-	
+	private ArrayList<String> listaNomePontos = new ArrayList<String>();
 	private JPanel contentPane;
-
-	Controller controller = new Controller();
+	private Controller controller = new Controller();
 	
 	/**
 	 * Launch the application.
@@ -93,16 +93,27 @@ public class JanelaPrincipal extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
+						boolean nomeDisponivel = false;
 						
-						controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+						while(!nomeDisponivel){
+							try {
+								controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+								nomeDisponivel = true;
+							} catch (PontoJaCadastradoException e1) {
+								nomeDoLocal = JOptionPane.showInputDialog("Nome ja cadastrado. Insira outro nome para o ponto:");
+							} catch (PontoComNomeNuloException e1) {
+								return;
+							}
+						}
 						listaNomePontos.add(nomeDoLocal);
-						
+						// Adiciona parte grafica do ponto
 						Circulo circulo = new Circulo();
 						circulo.setLocation(e.getX(), e.getY());
 						circulo.setSize(circulo.getPreferredSize());
 						painelGrafo.add(circulo);
 						painelGrafo.repaint();
 	
+						// Remove MouseListener do painel grafo, para tentar adicionar ponto com clique apos ja ter cadastrado um
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
 			};
@@ -122,7 +133,6 @@ public class JanelaPrincipal extends JFrame {
 		btnRemoverPonto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg) {
-				
 			}
 			
 		});
