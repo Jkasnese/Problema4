@@ -13,9 +13,9 @@ public class Controller {
 	private ArrayList<Ponto> listaPontos = new ArrayList<Ponto>();
 	
 	
-	public Ponto cadastrarPonto(String nomeDoLocal){
+	public Ponto cadastrarPonto(String nomeDoLocal, int coordX, int coordY){
 		
-		Ponto novoPonto = new Ponto(nomeDoLocal);
+		Ponto novoPonto = new Ponto(nomeDoLocal, coordX, coordY);
 		
 		listaPontos.add(novoPonto);
 		
@@ -47,9 +47,12 @@ public class Controller {
 	public void removerPonto(Ponto ponto){
 		
 		Iterator<Aresta> itera = ponto.getListaArestas().iterator();
-		
+		// Itera a lista de arestas do ponto a ser removido
 		while(itera.hasNext()){
 			
+			// Econtra o ponto seguinte de cada aresta da lista e 
+			// chama o método de remoção de arestas, passando os vértices da
+			// aresta a ser removida
 			Aresta aresta = itera.next();
 			Ponto pontoSeguinte = aresta.getPontoSeguinte();
 			
@@ -57,7 +60,6 @@ public class Controller {
 		}
 		
 		listaPontos.remove(ponto);
-		
 	}
 	
 	public void removerAresta(Ponto pontoA, Ponto pontoB){
