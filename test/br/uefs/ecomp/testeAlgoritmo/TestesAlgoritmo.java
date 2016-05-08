@@ -17,12 +17,12 @@ public class TestesAlgoritmo {
 	public void testCalcularRota(){
 	
 		// Cadastrando pontos
-		Ponto pontoA = controller.cadastrarPonto("A");
-		Ponto pontoB = controller.cadastrarPonto("B");
-		Ponto pontoC = controller.cadastrarPonto("C");
-		Ponto pontoD = controller.cadastrarPonto("D");
-		Ponto pontoE = controller.cadastrarPonto("E");
-		Ponto pontoF = controller.cadastrarPonto("F");
+		Ponto pontoA = controller.cadastrarPonto("A",0,0);
+		Ponto pontoB = controller.cadastrarPonto("B",0,0);
+		Ponto pontoC = controller.cadastrarPonto("C",0,0);
+		Ponto pontoD = controller.cadastrarPonto("D",0,0);
+		Ponto pontoE = controller.cadastrarPonto("E",0,0);
+		Ponto pontoF = controller.cadastrarPonto("F",0,0);
 		
 		//Cadastrando arestas
 		try {
