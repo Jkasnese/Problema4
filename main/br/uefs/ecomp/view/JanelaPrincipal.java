@@ -107,6 +107,15 @@ public class JanelaPrincipal extends JFrame {
 		painelBotoes.add(btnCadastrarAresta);
 		
 		JButton btnRemoverPonto = new JButton("Remover Ponto");
+		
+		btnRemoverPonto.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg) {
+				
+			}
+			
+		});
+		
 		painelBotoes.add(btnRemoverPonto);
 		
 		JButton btnRemoverAresta = new JButton("Remover Aresta");
