@@ -17,11 +17,11 @@ public class TesteCadastros {
 	@Test
 	public void testCadastrarPontoSucesso(){
 	
-		Ponto ponto1 = controller.cadastrarPonto("Garagem");
+		Ponto ponto1 = controller.cadastrarPonto("Garagem",0,0);
 		
-		Ponto ponto2 = controller.cadastrarPonto("Rua Etc");
+		Ponto ponto2 = controller.cadastrarPonto("Rua Etc",0,0);
 		
-		Ponto ponto3 = controller.cadastrarPonto("Avenida Tal");
+		Ponto ponto3 = controller.cadastrarPonto("Avenida Tal",0,0);
 		
 		Iterator<Ponto> itera = controller.getListaPontos().iterator();
 		
@@ -39,9 +39,9 @@ public class TesteCadastros {
 	@Test
 	public void testCadastrarArestaSucesso(){
 		
-		Ponto pontoA = controller.cadastrarPonto("Garagem");
-		Ponto pontoB = controller.cadastrarPonto("Rua Etc");
-		Ponto pontoC = controller.cadastrarPonto("Avenida Tal");
+		Ponto pontoA = controller.cadastrarPonto("Garagem",0,0);
+		Ponto pontoB = controller.cadastrarPonto("Rua Etc",0,0);
+		Ponto pontoC = controller.cadastrarPonto("Avenida Tal",0,0);
 		
 		try {
 			controller.cadastrarAresta(pontoA, pontoB, 5);

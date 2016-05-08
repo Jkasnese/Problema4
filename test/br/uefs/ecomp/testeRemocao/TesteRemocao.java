@@ -18,9 +18,9 @@ public class TesteRemocao {
 	@Test
 	public void testRemoverPontoSucesso(){
 		
-		Ponto pontoA = controller.cadastrarPonto("Garagem");
-		Ponto pontoB = controller.cadastrarPonto("Rua Tal");
-		Ponto pontoC = controller.cadastrarPonto("Avenida Etc");
+		Ponto pontoA = controller.cadastrarPonto("Garagem",0,0);
+		Ponto pontoB = controller.cadastrarPonto("Rua Tal",0,0);
+		Ponto pontoC = controller.cadastrarPonto("Avenida Etc",0,0);
 		
 		assertEquals(controller.getListaPontos().size(), 3);
 		
@@ -38,8 +38,8 @@ public class TesteRemocao {
 	@Test
 	public void testRemoverArestaSucesso(){
 		
-		Ponto pontoA = controller.cadastrarPonto("Garagem");
-		Ponto pontoB = controller.cadastrarPonto("Rua Etc");
+		Ponto pontoA = controller.cadastrarPonto("Garagem",0,0);
+		Ponto pontoB = controller.cadastrarPonto("Rua Etc",0,0);
 		
 		try {
 			controller.cadastrarAresta(pontoA, pontoB, 5);

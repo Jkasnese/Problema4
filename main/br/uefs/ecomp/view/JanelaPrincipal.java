@@ -5,7 +5,7 @@ import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -17,9 +17,13 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.model.Ponto;
 
 public class JanelaPrincipal extends JFrame {
 
+	ArrayList<String> listaNomePontos = new ArrayList<String>();
+	
+	
 	private JPanel contentPane;
 
 	Controller controller = new Controller();
@@ -91,7 +95,14 @@ public class JanelaPrincipal extends JFrame {
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
 						
 						controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+						listaNomePontos.add(nomeDoLocal);
 						
+						Circulo circulo = new Circulo();
+						circulo.setLocation(e.getX(), e.getY());
+						circulo.setSize(circulo.getPreferredSize());
+						painelGrafo.add(circulo);
+						painelGrafo.repaint();
+	
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
 			};
