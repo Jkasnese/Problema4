@@ -112,7 +112,7 @@ public class Controller {
 		
 		// Inicio do Algoritmo de Dijkstra
 		
-		final int VALOR_MAXIMO = 2147483647; // Maior valor de int possivel
+		final  int VALOR_MAXIMO = Integer.MAX_VALUE/2; // Maior valor de int possivel
 		int[][] matriz = grafo.getMatrizAdjacencia(); // Recebe a matriz de adjacencia do grafo
 		int[] distancia = new int[NUMERO_DE_PONTOS]; // Array que guarda a distancia de um ponto para outro
 		boolean[] visitado = new boolean[NUMERO_DE_PONTOS]; // Array que diz se ponto ja foi visitado ou nao 
@@ -130,6 +130,11 @@ public class Controller {
 			for (int j=0; j<NUMERO_DE_PONTOS; j++){
 				if(matriz[i][j] == 0)
 					matriz[i][j] = VALOR_MAXIMO; 
+//				// TESTANDO
+//				System.out.print(matriz[i][j] + " ");
+//				if (j == NUMERO_DE_PONTOS){
+//					System.out.println(" ");
+//				}
 			}
 		}
 		
@@ -151,7 +156,7 @@ public class Controller {
 			// Proximo ponto visitado sera aquele com a menor distancia total
 			for(int j = 0; j<NUMERO_DE_PONTOS; j++){
 				
-				if(distanciaMinima > distancia[j] && !visitado[j]){
+				if(distanciaMinima > distancia[j] && (!(visitado[j]))){
 					distanciaMinima = distancia[j];
 					proximoPonto = j;
 				}
@@ -163,7 +168,7 @@ public class Controller {
 			
 			// A partir do ponto obtido anteriormente, visita todos os outros pontos.
 			for (int k = 0; k<NUMERO_DE_PONTOS; k++){
-				if(!visitado[k]){ // Se K nao ja tiver sido visitado
+				if(!(visitado[k])){ // Se K nao ja tiver sido visitado
 					if(distanciaMinima + matriz[proximoPonto][k] < distancia[k]){
 						distancia[k] = distanciaMinima + matriz[proximoPonto][k];
 						pontoAnterior[k] = proximoPonto;
