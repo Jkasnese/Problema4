@@ -3,6 +3,8 @@ package br.uefs.ecomp.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
+import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
 import br.uefs.ecomp.model.Aresta;
 import br.uefs.ecomp.model.Grafo;
@@ -13,7 +15,20 @@ public class Controller {
 	private ArrayList<Ponto> listaPontos = new ArrayList<Ponto>();
 	
 	
-	public Ponto cadastrarPonto(String nomeDoLocal, int coordX, int coordY){
+	public Ponto cadastrarPonto(String nomeDoLocal, int coordX, int coordY) throws PontoJaCadastradoException, PontoComNomeNuloException{
+		
+		if (nomeDoLocal == null){
+			throw new PontoComNomeNuloException("Tentando cadastrar ponto com nome nulo!");
+		}
+		
+		Iterator<Ponto> itr = listaPontos.iterator();
+		
+		while(itr.hasNext()){
+			Ponto aux = itr.next();
+			if (aux.getNomeDoLocal().equals(nomeDoLocal)){
+				throw new PontoJaCadastradoException("Ja existe um ponto com este nome");
+			}
+		}
 		
 		Ponto novoPonto = new Ponto(nomeDoLocal, coordX, coordY);
 		
@@ -25,19 +40,19 @@ public class Controller {
 	
 	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao) throws PontoNaoExistenteException{
 	
-		// Caso os pontos escolhidos n�o estejam cadastrados, lan�a exce��o
+		// Caso os pontos escolhidos nao estejam cadastrados, lanca excecao
 		if(!listaPontos.contains(pontoInicial))
-			throw new PontoNaoExistenteException("Ponto inicial escolhido n�o foi cadastrado");
+			throw new PontoNaoExistenteException("Ponto inicial escolhido nao foi cadastrado");
 		else if(!listaPontos.contains(pontoFinal))
-			throw new PontoNaoExistenteException("Ponto final escolhido n�o foi cadastrado");
+			throw new PontoNaoExistenteException("Ponto final escolhido nao foi cadastrado");
 		
 		else{
-				// Cria duas novas arestas. A primeira ter� seu ponto seguinte como o ponto inicial
-			 	// e a segunda tem seu ponto seguinte como o ponto final, j� que o grafo n�o � direcionado
+				// Cria duas novas arestas. A primeira tera seu ponto seguinte como o ponto inicial
+			 	// e a segunda tem seu ponto seguinte como o ponto final, ja que o grafo nao eh direcionado
 				Aresta novaAresta1 = new Aresta(pontoFinal, duracao);
 				Aresta novaAresta2 = new Aresta(pontoInicial, duracao);
 				
-				// Adiciona as arestas �s listas de arestas dos seus respectivos pontos 
+				// Adiciona as arestas as listas de arestas dos seus respectivos pontos 
 				pontoInicial.getListaArestas().add(novaAresta1);
 				pontoFinal.getListaArestas().add(novaAresta2);
 		}
@@ -51,7 +66,7 @@ public class Controller {
 		while(itera.hasNext()){
 			
 			// Econtra o ponto seguinte de cada aresta da lista e 
-			// chama o m�todo de remo��o de arestas, passando os v�rtices da
+			// chama o metodo de remocaoo de arestas, passando os vertices da
 			// aresta a ser removida
 			Aresta aresta = itera.next();
 			Ponto pontoSeguinte = aresta.getPontoSeguinte();

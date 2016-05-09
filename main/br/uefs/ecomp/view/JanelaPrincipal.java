@@ -19,7 +19,8 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
-import br.uefs.ecomp.model.Ponto;
+import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
+import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 
 public class JanelaPrincipal extends JFrame {
 
@@ -28,8 +29,7 @@ public class JanelaPrincipal extends JFrame {
 	
 	
 	private JPanel contentPane;
-
-	Controller controller = new Controller();
+	private Controller controller = new Controller();
 	
 	/**
 	 * Launch the application.
@@ -95,10 +95,20 @@ public class JanelaPrincipal extends JFrame {
 					public void mouseClicked(MouseEvent e) {
 						
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
+						boolean nomeDisponivel = false;
 						
-						controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+						while(!nomeDisponivel){
+							try {
+								controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+								nomeDisponivel = true;
+							} catch (PontoJaCadastradoException e1) {
+								nomeDoLocal = JOptionPane.showInputDialog("Nome ja cadastrado. Insira outro nome para o ponto:");
+							} catch (PontoComNomeNuloException e1) {
+								return;
+							}
+						}
 						listaNomePontos.add(nomeDoLocal);
-						
+						// Adiciona parte grafica do ponto
 						Circulo circulo = new Circulo();
 						circulo.setLocation(e.getX(), e.getY());
 						circulo.setSize(circulo.getPreferredSize());
@@ -106,6 +116,7 @@ public class JanelaPrincipal extends JFrame {
 						listaVertices.add(circulo);
 						painelGrafo.repaint();
 	
+						// Remove MouseListener do painel grafo, para tentar adicionar ponto com clique apos ja ter cadastrado um
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
 			};
@@ -157,6 +168,14 @@ public class JanelaPrincipal extends JFrame {
 		painelBotoes.add(btnCadastrarAresta);
 		
 		JButton btnRemoverPonto = new JButton("Remover Ponto");
+		
+		btnRemoverPonto.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg) {
+			}
+			
+		});
+		
 		painelBotoes.add(btnRemoverPonto);
 		
 		JButton btnRemoverAresta = new JButton("Remover Aresta");
