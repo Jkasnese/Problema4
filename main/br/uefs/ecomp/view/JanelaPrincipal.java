@@ -16,12 +16,14 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
+import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
 import br.uefs.ecomp.model.Aresta;
 import br.uefs.ecomp.model.Ponto;
 
@@ -133,19 +135,25 @@ public class JanelaPrincipal extends JFrame {
 		btnCadastrarAresta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-		
-//				Object[] vetor = listaNomePontos.toArray();
-//				final JanelaCadastroAresta janela = new JanelaCadastroAresta(vetor);
-//				
+				
 				JPanel painelCadastro = new JPanel();
-				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
+				
 				JLabel primeiroPonto = new JLabel("Selecione o primeiro ponto:");
 				JLabel segundoPonto = new JLabel("Selecione o segundo ponto: ");
+				JLabel duracao = new JLabel("Insira a duracao do percurso:");
+				
+				
+				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
 				JComboBox<Object> comboBox2 = new JComboBox<Object>(listaNomePontos.toArray());
+				
+				JTextField duracaoTexto = new JTextField(10);
+				
 				painelCadastro.add(primeiroPonto);
 				painelCadastro.add(comboBox);
 				painelCadastro.add(segundoPonto);
 				painelCadastro.add(comboBox2);
+				painelCadastro.add(duracao);
+				painelCadastro.add(duracaoTexto);
 				
 				if(JOptionPane.showConfirmDialog(null, painelCadastro, "Cadastro de aresta", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
@@ -159,6 +167,11 @@ public class JanelaPrincipal extends JFrame {
 				Ponto ponto1 = controller.buscarPonto(nome1);
 				Ponto ponto2 = controller.buscarPonto(nome2);
 				
+				try {
+					controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()));
+				} catch (NumberFormatException | PontoNaoExistenteException e1) {
+					e1.printStackTrace();
+				}
 				
 				Linha aresta = new Linha(ponto1.getCoordX(), ponto1.getCoordY(), ponto2.getCoordX(), ponto2.getCoordY());
 				painelGrafo.add(aresta);
