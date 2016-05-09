@@ -106,6 +106,20 @@ public class Controller {
 		}
 	}
 	
+	public Ponto buscarPonto(String nomeDoPonto){
+		
+		Ponto ponto = new Ponto("", 0, 0);
+		Iterator<Ponto> iterador = listaPontos.iterator();
+		while(iterador.hasNext()){
+			
+			ponto = iterador.next();
+			if(ponto.getNomeDoLocal().equals(nomeDoPonto))
+				break;
+			
+		}
+		return ponto;
+	}
+	
 	private int calcularRota(ArrayList<Aresta> caminho, Ponto pontoInicial, Ponto pontoFinal) throws PontoNaoExistenteException{
 		
 		final int NUMERO_DE_PONTOS = listaPontos.size(); 
