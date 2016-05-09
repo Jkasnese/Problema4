@@ -7,6 +7,7 @@ import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
@@ -21,6 +22,7 @@ import javax.swing.border.EmptyBorder;
 import br.uefs.ecomp.controller.Controller;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
+import br.uefs.ecomp.model.Aresta;
 
 public class JanelaPrincipal extends JFrame {
 
@@ -143,7 +145,32 @@ public class JanelaPrincipal extends JFrame {
 		painelBotoes.add(btnRemoverAresta);
 		
 		JButton btnCalcularRota = new JButton("Calcular Rota");
+		
+		btnCalcularRota.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg){
+				// ArrayList de arestas que recebera o caminho
+				ArrayList<Aresta> caminho = new ArrayList();
+				
+				
+				// Escolhe o ponto inicial, coleta e final.
+				// Ponto inicial pode ser definido previamente, como definir garagem, ou combobox
+				// Ponto final pode ser definido previamente, como definir banco?, ou combobox
+				// Escolher ponto coleta com combobox, sem os pontos inicial e final, claro.
+								
+				int distancia = controller.calcularRota(caminho, pontoInicial, pontoColeta, pontoFinal);
+				
+				Iterator<Aresta> i = caminho.iterator();
+				Aresta aux;
+				while (i.hasNext()){
+					aux = i.next();
+					// mudar a cor de aux
+				}
+			}
+		});
 		painelBotoes.add(btnCalcularRota);
+		
+		
 		contentPane.setLayout(gl_contentPane);
 	}
 }

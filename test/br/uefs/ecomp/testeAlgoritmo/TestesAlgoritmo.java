@@ -3,10 +3,16 @@ package br.uefs.ecomp.testeAlgoritmo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.junit.Test;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
+import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
+import br.uefs.ecomp.model.Aresta;
 import br.uefs.ecomp.model.Ponto;
 
 public class TestesAlgoritmo {
@@ -17,12 +23,23 @@ public class TestesAlgoritmo {
 	public void testCalcularRota(){
 	
 		// Cadastrando pontos
-		Ponto pontoA = controller.cadastrarPonto("A",0,0);
-		Ponto pontoB = controller.cadastrarPonto("B",0,0);
-		Ponto pontoC = controller.cadastrarPonto("C",0,0);
-		Ponto pontoD = controller.cadastrarPonto("D",0,0);
-		Ponto pontoE = controller.cadastrarPonto("E",0,0);
-		Ponto pontoF = controller.cadastrarPonto("F",0,0);
+		Ponto pontoA = null;
+		Ponto pontoB = null;
+		Ponto pontoC = null;
+		Ponto pontoD = null;
+		Ponto pontoE = null;
+		Ponto pontoF = null;
+		try {
+			pontoA = controller.cadastrarPonto("A",0,0);
+			pontoB = controller.cadastrarPonto("B",0,0);
+			pontoC = controller.cadastrarPonto("C",0,0);
+			pontoD = controller.cadastrarPonto("D",0,0);
+			pontoE = controller.cadastrarPonto("E",0,0);
+			pontoF = controller.cadastrarPonto("F",0,0);
+		} catch (PontoJaCadastradoException | PontoComNomeNuloException e1) {
+			fail();
+		}
+
 		
 		//Cadastrando arestas
 		try {
@@ -41,10 +58,20 @@ public class TestesAlgoritmo {
 		
 		
 		// Calcula rota
+		ArrayList<Aresta> caminho = new ArrayList();
 		try {
-			assertEquals(17, controller.calcularRota(controller.getListaPontos(), pontoA, pontoF));
+			assertEquals(17, controller.calcularRota(caminho, pontoA, pontoC, pontoF));
 		} catch (PontoNaoExistenteException e) {
 			fail();
 		}
+
+		Iterator<Aresta> i = caminho.iterator();
+		Aresta aux;
+		while (i.hasNext()){
+			aux = i.next();
+			System.out.println(aux.getPontoSeguinte().getNomeDoLocal());
+		}
+		
+		
 	}
 }

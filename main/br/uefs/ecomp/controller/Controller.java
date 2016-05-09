@@ -106,7 +106,7 @@ public class Controller {
 		}
 	}
 	
-	public int calcularRota(ArrayList<Ponto> listaPontos, Ponto pontoInicial, Ponto pontoFinal) throws PontoNaoExistenteException{
+	private int calcularRota(ArrayList<Aresta> caminho, Ponto pontoInicial, Ponto pontoFinal) throws PontoNaoExistenteException{
 		
 		final int NUMERO_DE_PONTOS = listaPontos.size(); 
 		
@@ -192,10 +192,50 @@ public class Controller {
 			if (visitado[NUMERO_DE_PONTOS - 1]){ 
 				break;
 			}
-			
-			
 		}
+		
+		// Encontra caminho inverso
+		ArrayList<Ponto> caminhoInverso = new ArrayList();
+		int i = NUMERO_DE_PONTOS - 1;
+		while (i != 0){
+			caminhoInverso.add(listaPontos.get(i));
+			i = pontoAnterior[i];
+		}
+		
+		ArrayList<Ponto> caminhoPontos = new ArrayList();
+		// Adiciona caminho na ordem correta, removendo o último de caminhoInverso e adicionando em caminho
+		while (!caminhoInverso.isEmpty()){
+			caminhoPontos.add(caminhoInverso.remove(caminhoInverso.size() - 1));
+		}
+		
+		Iterator<Ponto> itr = caminhoPontos.iterator();
+		Ponto anterior = listaPontos.get(0);
+		Ponto aux;
+		
+		// Enquanto nao percorreu todos os pontos:
+		while (itr.hasNext()){
+			aux = itr.next();
+			Iterator<Aresta> itrAresta = anterior.getListaArestas().iterator();
+			Aresta arestaAux;
+			// Procura, dentro de ponto, aresta a ser adicionada
+			while(itrAresta.hasNext()){
+				arestaAux = itrAresta.next();
+				if(arestaAux.getPontoSeguinte() == aux){
+					caminho.add(arestaAux);
+					break;
+				}
+			}
+			anterior = aux;
+		}
+		
 		return distancia[NUMERO_DE_PONTOS - 1];
+	}
+	
+	public int calcularRota (ArrayList<Aresta> caminho, Ponto pontoInicial, Ponto pontoColeta, Ponto pontoFinal) throws PontoNaoExistenteException{
+		int distancia = 0;
+		distancia += calcularRota(caminho, pontoInicial, pontoColeta);
+		distancia += calcularRota(caminho, pontoColeta, pontoFinal);
+		return distancia;
 	}
 	
 	public ArrayList<Ponto> getListaPontos(){
