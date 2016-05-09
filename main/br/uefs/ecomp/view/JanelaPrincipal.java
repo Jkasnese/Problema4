@@ -21,6 +21,7 @@ import javax.swing.border.EmptyBorder;
 import br.uefs.ecomp.controller.Controller;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
+import br.uefs.ecomp.model.Ponto;
 
 public class JanelaPrincipal extends JFrame {
 
