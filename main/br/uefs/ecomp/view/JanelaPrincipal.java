@@ -24,6 +24,7 @@ import br.uefs.ecomp.model.Ponto;
 public class JanelaPrincipal extends JFrame {
 
 	ArrayList<String> listaNomePontos = new ArrayList<String>();
+	ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
 	
 	
 	private JPanel contentPane;
@@ -102,6 +103,7 @@ public class JanelaPrincipal extends JFrame {
 						circulo.setLocation(e.getX(), e.getY());
 						circulo.setSize(circulo.getPreferredSize());
 						painelGrafo.add(circulo);
+						listaVertices.add(circulo);
 						painelGrafo.repaint();
 	
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
