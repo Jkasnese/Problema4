@@ -22,18 +22,13 @@ import javax.swing.border.EmptyBorder;
 import br.uefs.ecomp.controller.Controller;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
-<<<<<<< HEAD
 import br.uefs.ecomp.model.Aresta;
-=======
 import br.uefs.ecomp.model.Ponto;
->>>>>>> refs/heads/ViewTrabalhada
 
 public class JanelaPrincipal extends JFrame {
 
-	ArrayList<String> listaNomePontos = new ArrayList<String>();
-	ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
-	
-	
+	private ArrayList<String> listaNomePontos = new ArrayList<String>();
+	private ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
 	private JPanel contentPane;
 	private Controller controller = new Controller();
 	
