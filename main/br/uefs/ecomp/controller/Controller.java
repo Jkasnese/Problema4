@@ -66,7 +66,7 @@ public class Controller {
 		while(itera.hasNext()){
 			
 			// Econtra o ponto seguinte de cada aresta da lista e 
-			// chama o metodo de remocaoo de arestas, passando os vertices da
+			// chama o metodo de remocao de arestas, passando os vertices da
 			// aresta a ser removida
 			Aresta aresta = itera.next();
 			Ponto pontoSeguinte = aresta.getPontoSeguinte();
@@ -106,6 +106,7 @@ public class Controller {
 		}
 	}
 	
+	// Busca um ponto na lista para auxiliar na remocao
 	public Ponto buscarPonto(String nomeDoPonto){
 		
 		Ponto ponto = new Ponto("", 0, 0);

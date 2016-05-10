@@ -2,6 +2,7 @@ package br.uefs.ecomp.view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -33,7 +34,6 @@ public class JanelaPrincipal extends JFrame {
 	private ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
 	private JPanel contentPane;
 	private Controller controller = new Controller();
-	
 	/**
 	 * Launch the application.
 	 */
@@ -61,6 +61,7 @@ public class JanelaPrincipal extends JFrame {
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
 		setTitle("Buscador de Rota");
+		setResizable(false);
 		
 		JPanel painelBotoes = new JPanel();
 		
@@ -72,21 +73,31 @@ public class JanelaPrincipal extends JFrame {
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(painelBotoes, GroupLayout.PREFERRED_SIZE, 134, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.UNRELATED)
-					.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE))
+					.addComponent(painelBotoes, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.LEADING)
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE)
-						.addComponent(painelBotoes, GroupLayout.DEFAULT_SIZE, 378, Short.MAX_VALUE))
-					.addContainerGap())
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addComponent(painelBotoes, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 369, Short.MAX_VALUE)
+						.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+					.addGap(21))
 		);
+		GroupLayout gl_painelGrafo = new GroupLayout(painelGrafo);
+		gl_painelGrafo.setHorizontalGroup(
+			gl_painelGrafo.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 448, Short.MAX_VALUE)
+		);
+		gl_painelGrafo.setVerticalGroup(
+			gl_painelGrafo.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 379, Short.MAX_VALUE)
+		);
+		painelGrafo.setLayout(gl_painelGrafo);
 		
 		JButton btnCadastrarPonto = new JButton("Cadastrar Ponto");
-		
+
 		btnCadastrarPonto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -100,9 +111,12 @@ public class JanelaPrincipal extends JFrame {
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
 						boolean nomeDisponivel = false;
 						
+						int x = e.getX();
+						int y = e.getY();
+						
 						while(!nomeDisponivel){
 							try {
-								controller.cadastrarPonto(nomeDoLocal, e.getX(), e.getY());
+								controller.cadastrarPonto(nomeDoLocal, x, y);
 								nomeDisponivel = true;
 							} catch (PontoJaCadastradoException e1) {
 								nomeDoLocal = JOptionPane.showInputDialog("Nome ja cadastrado. Insira outro nome para o ponto:");
@@ -112,13 +126,14 @@ public class JanelaPrincipal extends JFrame {
 						}
 						listaNomePontos.add(nomeDoLocal);
 						// Adiciona parte grafica do ponto
-						Circulo circulo = new Circulo();
-						circulo.setLocation(e.getX(), e.getY());
+						Circulo circulo = new Circulo(x,y);
+						circulo.setLocation(x, y);
 						circulo.setSize(circulo.getPreferredSize());
 						painelGrafo.add(circulo);
 						listaVertices.add(circulo);
+					
 						painelGrafo.repaint();
-	
+						
 						// Remove MouseListener do painel grafo, para tentar adicionar ponto com clique apos ja ter cadastrado um
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
@@ -127,9 +142,8 @@ public class JanelaPrincipal extends JFrame {
 			}
 	
 		});
-		painelBotoes.add(btnCadastrarPonto);
 		
-		
+		listaNomePontos.add("");
 		
 		JButton btnCadastrarAresta = new JButton("Cadastrar Aresta");
 		btnCadastrarAresta.addMouseListener(new MouseAdapter() {
@@ -154,46 +168,96 @@ public class JanelaPrincipal extends JFrame {
 				painelCadastro.add(comboBox2);
 				painelCadastro.add(duracao);
 				painelCadastro.add(duracaoTexto);
-				
+		
 				if(JOptionPane.showConfirmDialog(null, painelCadastro, "Cadastro de aresta", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
+					if(duracaoTexto.getText().equals(""))
+						JOptionPane.showMessageDialog(null, "Duracao do percurso nao foi inserida! Tente novamente");
+					
+					else{	
+					String nome1 = comboBox.getSelectedItem().toString();
+					String nome2 = comboBox2.getSelectedItem().toString();
 				
-				String nome1 = comboBox.getSelectedItem().toString();
-				String nome2 = comboBox2.getSelectedItem().toString();
+					Ponto ponto1 = controller.buscarPonto(nome1);
+					Ponto ponto2 = controller.buscarPonto(nome2);
 				
-				System.out.println(nome1);
-				System.out.println(nome2);
+					try {
+						controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()));
+					} catch (NumberFormatException | PontoNaoExistenteException e1) {
+						e1.printStackTrace();
+					}
+					
+					// Constroi a linha passando a coordenada dos pontos mais o raio dos mesmos
+					Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10);
+					aresta.setSize(getPreferredSize());
 				
-				Ponto ponto1 = controller.buscarPonto(nome1);
-				Ponto ponto2 = controller.buscarPonto(nome2);
-				
-				try {
-					controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()));
-				} catch (NumberFormatException | PontoNaoExistenteException e1) {
-					e1.printStackTrace();
+					painelGrafo.add(aresta);
+					painelGrafo.repaint();
+					}
 				}
-				
-				Linha aresta = new Linha(ponto1.getCoordX(), ponto1.getCoordY(), ponto2.getCoordX(), ponto2.getCoordY());
-				painelGrafo.add(aresta);
-				painelGrafo.repaint();
-			}
 			}
 		});
-		painelBotoes.add(btnCadastrarAresta);
 		
 		JButton btnRemoverPonto = new JButton("Remover Ponto");
 		
 		btnRemoverPonto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg) {
+			
+				JPanel painelRemocao = new JPanel();
+				
+				JLabel primeiroPonto = new JLabel("Selecione o ponto a ser removido:");
+				
+				
+				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
+								
+				painelRemocao.add(primeiroPonto);
+				painelRemocao.add(comboBox);
+				
+				if(JOptionPane.showConfirmDialog(null, painelRemocao, "Remocao de ponto", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+				{
+					String nome = comboBox.getSelectedItem().toString();
+					
+					Ponto ponto = controller.buscarPonto(nome);
+					
+					controller.removerPonto(ponto);
+					
+					Iterator<String> itr = listaNomePontos.iterator();
+					while(itr.hasNext())
+					{
+						String nomePonto = itr.next();
+						if(nomePonto.equals(nome)){
+							listaNomePontos.remove(nomePonto);
+							break;
+							}
+						}
+					
+					Iterator<Circulo> itera = listaVertices.iterator();
+					while(itera.hasNext()){
+						
+						Circulo circulo = itera.next();
+						if(circulo.getCoordX() == ponto.getCoordX() && circulo.getCoordY() == ponto.getCoordY())
+						{
+							System.out.println("Alou");
+							listaVertices.remove(circulo);
+							painelGrafo.remove(circulo);
+							break;
+						}
+						}
+					
+					//painelGrafo.revalidate();
+					painelGrafo.repaint();
+				}
 			}
 			
 		});
 		
-		painelBotoes.add(btnRemoverPonto);
-		
 		JButton btnRemoverAresta = new JButton("Remover Aresta");
-		painelBotoes.add(btnRemoverAresta);
+		btnRemoverAresta.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
 		
 		JButton btnCalcularRota = new JButton("Calcular Rota");
 		
@@ -219,7 +283,35 @@ public class JanelaPrincipal extends JFrame {
 				}
 			}
 		});
-		painelBotoes.add(btnCalcularRota);
+		GroupLayout gl_painelBotoes = new GroupLayout(painelBotoes);
+		gl_painelBotoes.setHorizontalGroup(
+			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_painelBotoes.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_painelBotoes.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(btnCadastrarPonto, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnRemoverAresta, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnRemoverPonto, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnCalcularRota, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.addComponent(btnCadastrarAresta))
+					.addContainerGap(21, Short.MAX_VALUE))
+		);
+		gl_painelBotoes.setVerticalGroup(
+			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_painelBotoes.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnCadastrarPonto)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnCadastrarAresta)
+					.addGap(3)
+					.addComponent(btnRemoverPonto)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnRemoverAresta)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnCalcularRota)
+					.addGap(232))
+		);
+		painelBotoes.setLayout(gl_painelBotoes);
 		
 		
 		contentPane.setLayout(gl_contentPane);
