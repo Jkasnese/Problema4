@@ -32,6 +32,7 @@ public class JanelaPrincipal extends JFrame {
 
 	private ArrayList<String> listaNomePontos = new ArrayList<String>();
 	private ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
+	private ArrayList<Linha> listaArestas = new ArrayList<Linha>();
 	private JPanel contentPane;
 	private Controller controller = new Controller();
 	/**
@@ -125,6 +126,7 @@ public class JanelaPrincipal extends JFrame {
 							}
 						}
 						listaNomePontos.add(nomeDoLocal);
+						
 						// Adiciona parte grafica do ponto
 						Circulo circulo = new Circulo(x,y);
 						circulo.setLocation(x, y);
@@ -191,6 +193,8 @@ public class JanelaPrincipal extends JFrame {
 					Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10);
 					aresta.setSize(getPreferredSize());
 				
+					listaArestas.add(aresta);
+					
 					painelGrafo.add(aresta);
 					painelGrafo.repaint();
 					}
@@ -220,6 +224,8 @@ public class JanelaPrincipal extends JFrame {
 					
 					Ponto ponto = controller.buscarPonto(nome);
 					
+					ArrayList<Aresta> listaParaRemover = ponto.getListaArestas();
+					
 					controller.removerPonto(ponto);
 					
 					Iterator<String> itr = listaNomePontos.iterator();
@@ -230,22 +236,26 @@ public class JanelaPrincipal extends JFrame {
 							listaNomePontos.remove(nomePonto);
 							break;
 							}
-						}
+					}
 					
 					Iterator<Circulo> itera = listaVertices.iterator();
 					while(itera.hasNext()){
-						
 						Circulo circulo = itera.next();
 						if(circulo.getCoordX() == ponto.getCoordX() && circulo.getCoordY() == ponto.getCoordY())
 						{
-							System.out.println("Alou");
 							listaVertices.remove(circulo);
 							painelGrafo.remove(circulo);
 							break;
 						}
-						}
+					}
 					
-					//painelGrafo.revalidate();
+					for(Aresta aresta : listaParaRemover){	
+						for(Linha linha : listaArestas){
+						if(aresta.getId() == linha.getId())
+							listaArestas.remove(linha);
+							painelGrafo.remove(linha);
+					}
+		}
 					painelGrafo.repaint();
 				}
 			}
