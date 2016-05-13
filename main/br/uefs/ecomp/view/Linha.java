@@ -13,16 +13,16 @@ import javax.swing.JPanel;
 public class Linha extends JPanel {
 
 	private static int idClasse = 1;
-
-	private int x1, x2, y1, y2, id;
+	private int x1, x2, y1, y2;
+	private String nome;
 	
-	public Linha(int x1, int y1, int x2, int y2){
+	public Linha(int x1, int y1, int x2, int y2, String nome){
 	
 		this.x1 = x1;
 		this.x2 = x2;
 		this.y1 = y1;
 		this.y2 = y2;
-		this.id = idClasse;
+		this.nome = nome;
 		idClasse++;
 		setOpaque(false);
 	}
@@ -39,6 +39,16 @@ public class Linha extends JPanel {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		g2.setColor(Color.WHITE);
+		g2.setStroke(new BasicStroke(3.0f));
+		g2.draw(new Line2D.Double(x1, y1, x2, y2));
+		
+	}
+	
+	public void paintComponentRed(Graphics g){
+		
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		g2.setColor(Color.RED);
 		g2.setStroke(new BasicStroke(3.0f));
 		g2.draw(new Line2D.Double(x1, y1, x2, y2));
 		
@@ -84,12 +94,10 @@ public class Linha extends JPanel {
 		this.y2 = y2;
 	}
 
-	public int getId() {
-		return id;
+	public String getNome() {
+		return nome;
 	}
 
-	public void setId(int id) {
-		this.id = id;
-	}
+	
 	
 }

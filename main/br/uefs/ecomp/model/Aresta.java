@@ -4,15 +4,20 @@ public class Aresta {
 
 	private static int idClasse = 1;
 	private Ponto pontoSeguinte;
-	private int duracao, id;
+	private int duracao;
+	private String nome;
 
-	public Aresta(Ponto pontoSeguinte, int duracao){
+	public Aresta(Ponto pontoSeguinte, int duracao, String nome){
 		this.pontoSeguinte = pontoSeguinte;
 		this.duracao = duracao;
-		this.setId(idClasse);
+		this.nome = nome;
 		idClasse++;
 	}
 	
+	public String getNome() {
+		return nome;
+	}
+
 	public Ponto getPontoSeguinte() {
 		return pontoSeguinte;
 	}
@@ -29,12 +34,8 @@ public class Aresta {
 		this.duracao = duracao;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+	public static int getIdClasse() {
+		return idClasse;
 	}
 	
 }

@@ -32,7 +32,7 @@ public class JanelaPrincipal extends JFrame {
 
 	private ArrayList<String> listaNomePontos = new ArrayList<String>();
 	private ArrayList<Circulo> listaVertices = new ArrayList<Circulo>();
-	private ArrayList<Linha> listaArestas = new ArrayList<Linha>();
+	private ArrayList<Linha> listaLinhas = new ArrayList<Linha>();
 	private JPanel contentPane;
 	private Controller controller = new Controller();
 	/**
@@ -184,16 +184,16 @@ public class JanelaPrincipal extends JFrame {
 					Ponto ponto2 = controller.buscarPonto(nome2);
 				
 					try {
-						controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()));
+						controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()), ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
 					} catch (NumberFormatException | PontoNaoExistenteException e1) {
 						e1.printStackTrace();
 					}
 					
 					// Constroi a linha passando a coordenada dos pontos mais o raio dos mesmos
-					Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10);
+					Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10, ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
 					aresta.setSize(getPreferredSize());
 				
-					listaArestas.add(aresta);
+					listaLinhas.add(aresta);
 					
 					painelGrafo.add(aresta);
 					painelGrafo.repaint();
@@ -297,19 +297,68 @@ public class JanelaPrincipal extends JFrame {
 				// ArrayList de arestas que recebera o caminho
 				ArrayList<Aresta> caminho = new ArrayList();
 				
-				
 				// Escolhe o ponto inicial, coleta e final.
+				JPanel painelRota = new JPanel();
+				
+				JLabel garagem = new JLabel("Selecione a garagem:");
+				JLabel coleta = new JLabel("Selecione o ponto de coleta: ");
+				JLabel banco = new JLabel("Selecione o banco de destino final:");
+				
+				
+				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
+				JComboBox<Object> comboBox2 = new JComboBox<Object>(listaNomePontos.toArray());
+				JComboBox<Object> comboBox3 = new JComboBox<Object>(listaNomePontos.toArray());
+				
+				painelRota.add(garagem);
+				painelRota.add(comboBox);
+				painelRota.add(coleta);
+				painelRota.add(comboBox2);
+				painelRota.add(banco);
+				painelRota.add(comboBox3);
+		
+				Ponto pontoInicial = null;
+				Ponto pontoColeta = null;
+				Ponto pontoFinal = null;
+				
+				if(JOptionPane.showConfirmDialog(null, painelRota, "Calcular Rota", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+				{
+					String nomeGaragem = comboBox.getSelectedItem().toString();
+					String nomeColeta = comboBox2.getSelectedItem().toString();
+					String nomeBanco = comboBox3.getSelectedItem().toString();
+				
+					pontoInicial = controller.buscarPonto(nomeGaragem);
+					pontoColeta = controller.buscarPonto(nomeColeta);
+					pontoFinal = controller.buscarPonto(nomeBanco);
+				}
+				
 				// Ponto inicial pode ser definido previamente, como definir garagem, ou combobox
 				// Ponto final pode ser definido previamente, como definir banco?, ou combobox
 				// Escolher ponto coleta com combobox, sem os pontos inicial e final, claro.
 								
-				int distancia = controller.calcularRota(caminho, pontoInicial, pontoColeta, pontoFinal);
 				
+				// Calcula rota
+				try {
+					int distancia = controller.calcularRota(caminho, pontoInicial, pontoColeta, pontoFinal);
+				} catch (PontoNaoExistenteException e) { // Caso ponto nao exista
+					e.printStackTrace();
+				}
+				
+				
+				// Muda a cor das arestas do caminho no grafo
+				Linha linhaAux;
 				Iterator<Aresta> i = caminho.iterator();
 				Aresta aux;
 				while (i.hasNext()){
 					aux = i.next();
-					// mudar a cor de aux
+					Iterator<Linha> itrLinha = listaLinhas.iterator();
+					while(itrLinha.hasNext()){
+						linhaAux = itrLinha.next();
+						if (aux.getNome().equals(linhaAux.getNome()) ){
+							// Muda a cor da aresta no grafo
+							linhaAux.paintComponentRed(painelGrafo.getGraphics());
+							break;
+						}
+					}
 				}
 			}
 		});

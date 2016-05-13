@@ -38,7 +38,7 @@ public class Controller {
 	}
 	
 	
-	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao) throws PontoNaoExistenteException{
+	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao, String nome) throws PontoNaoExistenteException{
 	
 		// Caso os pontos escolhidos nao estejam cadastrados, lanca excecao
 		if(!listaPontos.contains(pontoInicial))
@@ -49,8 +49,8 @@ public class Controller {
 		else{
 				// Cria duas novas arestas. A primeira tera seu ponto seguinte como o ponto inicial
 			 	// e a segunda tem seu ponto seguinte como o ponto final, ja que o grafo nao eh direcionado
-				Aresta novaAresta1 = new Aresta(pontoFinal, duracao);
-				Aresta novaAresta2 = new Aresta(pontoInicial, duracao);
+				Aresta novaAresta1 = new Aresta(pontoFinal, duracao, nome);
+				Aresta novaAresta2 = new Aresta(pontoInicial, duracao, nome);
 				
 				// Adiciona as arestas as listas de arestas dos seus respectivos pontos 
 				pontoInicial.getListaArestas().add(novaAresta1);
