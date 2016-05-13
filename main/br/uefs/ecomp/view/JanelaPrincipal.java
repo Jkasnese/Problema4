@@ -275,6 +275,43 @@ public class JanelaPrincipal extends JFrame {
 		btnRemoverAresta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				// Escolhe aresta a ser removida com base em seus pontos.
+				JPanel painelRemoveAresta = new JPanel();
+				
+				JLabel lblPonto1 = new JLabel("Selecione um ponto da aresta");
+				JLabel lblPonto2 = new JLabel("Selecione o outro ponto da aresta");
+				
+				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
+				JComboBox<Object> comboBox2 = new JComboBox<Object>(listaNomePontos.toArray());
+				
+				painelRemoveAresta.add(lblPonto1);
+				painelRemoveAresta.add(comboBox);
+				painelRemoveAresta.add(lblPonto2);
+				painelRemoveAresta.add(comboBox2);
+				
+				Ponto ponto1 = null;
+				Ponto ponto2 = null;
+				
+				if(JOptionPane.showConfirmDialog(null, painelRemoveAresta, "Remover Aresta", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+				{
+					String nomePonto1 = comboBox.getSelectedItem().toString();
+					String nomePonto2 = comboBox2.getSelectedItem().toString();
+				
+					ponto1 = controller.buscarPonto(nomePonto1);
+					ponto2 = controller.buscarPonto(nomePonto2);
+				}
+				
+				
+				// Remove a aresta do sistema
+				controller.removerAresta(ponto1, ponto2);
+				
+				// Remove aresta do grafo
+				
+				
+				// Repinta grafo
+				
+				
 			}
 		});
 		
@@ -345,7 +382,6 @@ public class JanelaPrincipal extends JFrame {
 						if (aux.getNome().equals(linhaAux.getNome()) ){
 							// Muda a cor da aresta no grafo
 							linhaAux.paintComponentRed(painelGrafo.getGraphics());
-							System.out.println("Pintou!");
 							break;
 						}
 					}
