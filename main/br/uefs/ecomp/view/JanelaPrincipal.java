@@ -224,16 +224,13 @@ public class JanelaPrincipal extends JFrame {
 					
 					Ponto ponto = controller.buscarPonto(nome);
 					
-				
+					// Cria uma copia da lista de arestas do ponto, para auxiliar na remocao da aresta grafica
 					ArrayList<Aresta> listaParaRemover = (ArrayList<Aresta>)ponto.getListaArestas().clone();
 					
-					System.out.println(listaParaRemover.size());
-					
+					// Remove o ponto
 					controller.removerPonto(ponto);
-					
-					System.out.println(listaParaRemover.size());
-					
-					
+									
+					// Itera a lista de nome dos pontos e remove o nome correspondente ao ponto removido
 					Iterator<String> itr = listaNomePontos.iterator();
 					while(itr.hasNext())
 					{
@@ -244,6 +241,7 @@ public class JanelaPrincipal extends JFrame {
 							}
 					}
 					
+					// Itera a lista de vertices do grafo grafico e remove os nos correspondentes 
 					Iterator<Circulo> itera = listaVertices.iterator();
 					while(itera.hasNext()){
 						Circulo circulo = itera.next();
@@ -256,26 +254,25 @@ public class JanelaPrincipal extends JFrame {
 						}
 					}
 
-					
-					Iterator<Aresta> iterAresta = listaParaRemover.iterator();
-					Iterator<Linha> iter = listaArestas.iterator();					
-					
 					int i = 0;
 
-					for(i = 0; i<=listaParaRemover.size(); i++){
-						System.out.println("ALOU 4");
-						Aresta aresta = iterAresta.next();
-						Linha linha = listaArestas.get(i);
+					// Itera a lista de arestas a serem removidas e remove as linhas correspondentes no grafo
+					for(i = 0; i<listaParaRemover.size(); i++){
+						Aresta aresta = listaParaRemover.get(i);
 						
-						if(aresta.getId() == linha.getId())
+						for(int j = 0; j<listaLinhas.size(); j++){
+						
+						Linha linha = listaLinhas.get(j);
+						
+						if(aresta.getNome().equals(linha.getNome()))
 								{
-									System.out.println("ALOU 5");
-									listaArestas.remove(linha);
+									listaLinhas.remove(linha);
 									painelGrafo.remove(linha);
 								}
 						}
+					}
 					
-					System.out.println("ALOU 6");
+					// Repinta o grafo com o ponto e suas respectivas arestas ja removidos
 					painelGrafo.repaint();
 				}
 			}
