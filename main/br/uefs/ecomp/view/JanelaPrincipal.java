@@ -292,7 +292,7 @@ public class JanelaPrincipal extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent arg){
 				// ArrayList de arestas que recebera o caminho
-				ArrayList<Aresta> caminho = new ArrayList();
+				ArrayList<Aresta> caminho = new ArrayList<Aresta>();
 				
 				// Escolhe o ponto inicial, coleta e final.
 				JPanel painelRota = new JPanel();
@@ -362,15 +362,14 @@ public class JanelaPrincipal extends JFrame {
 		GroupLayout gl_painelBotoes = new GroupLayout(painelBotoes);
 		gl_painelBotoes.setHorizontalGroup(
 			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_painelBotoes.createSequentialGroup()
-					.addContainerGap()
-					.addGroup(gl_painelBotoes.createParallelGroup(Alignment.LEADING, false)
-						.addComponent(btnCadastrarPonto, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnRemoverAresta, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnRemoverPonto, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnCalcularRota, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-						.addComponent(btnCadastrarAresta))
-					.addContainerGap(21, Short.MAX_VALUE))
+				.addGroup(Alignment.TRAILING, gl_painelBotoes.createSequentialGroup()
+					.addGroup(gl_painelBotoes.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnCalcularRota, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnRemoverAresta, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnRemoverPonto, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnCadastrarAresta, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnCadastrarPonto, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+					.addGap(31))
 		);
 		gl_painelBotoes.setVerticalGroup(
 			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
@@ -385,7 +384,7 @@ public class JanelaPrincipal extends JFrame {
 					.addComponent(btnRemoverAresta)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnCalcularRota)
-					.addGap(232))
+					.addGap(222))
 		);
 		painelBotoes.setLayout(gl_painelBotoes);
 		

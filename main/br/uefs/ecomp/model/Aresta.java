@@ -2,7 +2,6 @@ package br.uefs.ecomp.model;
 
 public class Aresta {
 
-	private static int idClasse = 1;
 	private Ponto pontoSeguinte;
 	private int duracao;
 	private String nome;
@@ -11,7 +10,6 @@ public class Aresta {
 		this.pontoSeguinte = pontoSeguinte;
 		this.duracao = duracao;
 		this.nome = nome;
-		idClasse++;
 	}
 	
 	public String getNome() {
@@ -34,8 +32,4 @@ public class Aresta {
 		this.duracao = duracao;
 	}
 
-	public static int getIdClasse() {
-		return idClasse;
-	}
-	
 }

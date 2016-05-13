@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 
 public class Linha extends JPanel {
 
-	private static int idClasse = 1;
 	private int x1, x2, y1, y2;
 	private String nome;
 	
@@ -23,7 +22,6 @@ public class Linha extends JPanel {
 		this.y1 = y1;
 		this.y2 = y2;
 		this.nome = nome;
-		idClasse++;
 		setOpaque(false);
 	}
 	
@@ -54,13 +52,6 @@ public class Linha extends JPanel {
 		
 	}
 
-	public static int getIdClasse() {
-		return idClasse;
-	}
-
-	public static void setIdClasse(int idClasse) {
-		Linha.idClasse = idClasse;
-	}
 
 	public int getX1() {
 		return x1;
