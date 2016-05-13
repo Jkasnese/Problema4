@@ -27,8 +27,13 @@ public class TesteRemocao {
 			e.printStackTrace();
 		}
 		Ponto pontoB = null;
+		Ponto pontoD = null;
+		Ponto pontoE = null;
 		try {
 			pontoB = controller.cadastrarPonto("Rua Tal",0,0);
+			pontoD = controller.cadastrarPonto("Rua Ou",0,0);
+			pontoE = controller.cadastrarPonto("Rua Ih",0,0);
+			
 		} catch (PontoJaCadastradoException | PontoComNomeNuloException e) {
 			e.printStackTrace();
 		}
@@ -39,22 +44,29 @@ public class TesteRemocao {
 			e.printStackTrace();
 		}
 		
+		
 		try {
-			controller.cadastrarAresta(pontoB, pontoA, 4);
+				controller.cadastrarAresta(pontoB, pontoA, 4);
+				controller.cadastrarAresta(pontoB, pontoC, 2);
+				controller.cadastrarAresta(pontoB, pontoD, 2);
+				controller.cadastrarAresta(pontoB, pontoE, 2);
+				
 		} catch (PontoNaoExistenteException e) {
 			e.printStackTrace();
 		}
 		
-		assertEquals(controller.getListaPontos().size(), 3);
+		assertEquals(controller.getListaPontos().size(), 5);
+		
+		assertEquals(pontoB.getListaArestas().size(), 4);
 		
 		controller.removerPonto(pontoB);
 		
-		assertEquals(controller.getListaPontos().size(), 2);
+		assertEquals(controller.getListaPontos().size(), 4);
 		
 		assertTrue(controller.getListaPontos().contains(pontoA));
 		
-		
-		
+		assertEquals(pontoB.getListaArestas().size(), 0);
+				
 		assertTrue(controller.getListaPontos().contains(pontoC));
 		
 		

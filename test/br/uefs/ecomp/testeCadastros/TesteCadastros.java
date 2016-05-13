@@ -6,6 +6,8 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
+import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
 import br.uefs.ecomp.model.Aresta;
 import br.uefs.ecomp.model.Ponto;
@@ -15,7 +17,7 @@ public class TesteCadastros {
 	private Controller controller = new Controller();
 	
 	@Test
-	public void testCadastrarPontoSucesso(){
+	public void testCadastrarPontoSucesso() throws PontoJaCadastradoException, PontoComNomeNuloException{
 	
 		Ponto ponto1 = controller.cadastrarPonto("Garagem",0,0);
 		
@@ -37,7 +39,7 @@ public class TesteCadastros {
 	}
 	
 	@Test
-	public void testCadastrarArestaSucesso(){
+	public void testCadastrarArestaSucesso() throws PontoJaCadastradoException, PontoComNomeNuloException{
 		
 		Ponto pontoA = controller.cadastrarPonto("Garagem",0,0);
 		Ponto pontoB = controller.cadastrarPonto("Rua Etc",0,0);

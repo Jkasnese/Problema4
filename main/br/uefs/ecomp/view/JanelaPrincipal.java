@@ -224,10 +224,15 @@ public class JanelaPrincipal extends JFrame {
 					
 					Ponto ponto = controller.buscarPonto(nome);
 					
-					ArrayList<Aresta> listaParaRemover = new ArrayList<Aresta>(); 
-					listaParaRemover = ponto.getListaArestas();
+				
+					ArrayList<Aresta> listaParaRemover = (ArrayList<Aresta>)ponto.getListaArestas().clone();
+					
+					System.out.println(listaParaRemover.size());
 					
 					controller.removerPonto(ponto);
+					
+					System.out.println(listaParaRemover.size());
+					
 					
 					Iterator<String> itr = listaNomePontos.iterator();
 					while(itr.hasNext())
@@ -242,6 +247,7 @@ public class JanelaPrincipal extends JFrame {
 					Iterator<Circulo> itera = listaVertices.iterator();
 					while(itera.hasNext()){
 						Circulo circulo = itera.next();
+						
 						if(circulo.getCoordX() == ponto.getCoordX() && circulo.getCoordY() == ponto.getCoordY())
 						{
 							listaVertices.remove(circulo);
@@ -250,12 +256,16 @@ public class JanelaPrincipal extends JFrame {
 						}
 					}
 
+					
 					Iterator<Aresta> iterAresta = listaParaRemover.iterator();
-					Iterator<Linha> iter = listaArestas.iterator();
-					for(int i = 0; i<listaParaRemover.size(); i++){
+					Iterator<Linha> iter = listaArestas.iterator();					
+					
+					int i = 0;
+
+					for(i = 0; i<=listaParaRemover.size(); i++){
 						System.out.println("ALOU 4");
 						Aresta aresta = iterAresta.next();
-						Linha linha = iter.next();
+						Linha linha = listaArestas.get(i);
 						
 						if(aresta.getId() == linha.getId())
 								{
