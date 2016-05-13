@@ -3,6 +3,7 @@ package br.uefs.ecomp.controller;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import br.uefs.ecomp.exceptions.ArestaJaCadastradaException;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
@@ -38,24 +39,33 @@ public class Controller {
 	}
 	
 	
-	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao, String nome) throws PontoNaoExistenteException{
+	public void cadastrarAresta(Ponto pontoInicial, Ponto pontoFinal, int duracao, String nome) throws PontoNaoExistenteException, ArestaJaCadastradaException{
 	
 		// Caso os pontos escolhidos nao estejam cadastrados, lanca excecao
-		if(!listaPontos.contains(pontoInicial))
+		if(!listaPontos.contains(pontoInicial)) 
 			throw new PontoNaoExistenteException("Ponto inicial escolhido nao foi cadastrado");
-		else if(!listaPontos.contains(pontoFinal))
+		if (!listaPontos.contains(pontoFinal)) 
 			throw new PontoNaoExistenteException("Ponto final escolhido nao foi cadastrado");
 		
-		else{
-				// Cria duas novas arestas. A primeira tera seu ponto seguinte como o ponto inicial
-			 	// e a segunda tem seu ponto seguinte como o ponto final, ja que o grafo nao eh direcionado
-				Aresta novaAresta1 = new Aresta(pontoFinal, duracao, nome);
-				Aresta novaAresta2 = new Aresta(pontoInicial, duracao, nome);
-				
-				// Adiciona as arestas as listas de arestas dos seus respectivos pontos 
-				pontoInicial.getListaArestas().add(novaAresta1);
-				pontoFinal.getListaArestas().add(novaAresta2);
+		// Confere se aresta ja existe
+		Iterator<Aresta> iPontoInicial = pontoInicial.getListaArestas().iterator();
+		Aresta aux;
+		while (iPontoInicial.hasNext()) {
+			aux = iPontoInicial.next();
+			if (aux.getPontoSeguinte() == pontoFinal){
+				throw new ArestaJaCadastradaException("Voce ja cadastrou essa aresta!");
+			}
 		}
+
+	
+		// Cria duas novas arestas. A primeira tera seu ponto seguinte como o ponto inicial
+	 	// e a segunda tem seu ponto seguinte como o ponto final, ja que o grafo nao eh direcionado
+		Aresta novaAresta1 = new Aresta(pontoFinal, duracao, nome);
+		Aresta novaAresta2 = new Aresta(pontoInicial, duracao, nome);
+		
+		// Adiciona as arestas as listas de arestas dos seus respectivos pontos 
+		pontoInicial.getListaArestas().add(novaAresta1);
+		pontoFinal.getListaArestas().add(novaAresta2);
 	
 	}
 	
