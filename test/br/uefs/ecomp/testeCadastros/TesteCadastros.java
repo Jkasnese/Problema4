@@ -1,11 +1,12 @@
 package br.uefs.ecomp.testeCadastros;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Iterator;
 
 import org.junit.Test;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.ArestaJaCadastradaException;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
@@ -46,15 +47,19 @@ public class TesteCadastros {
 		Ponto pontoC = controller.cadastrarPonto("Avenida Tal",0,0);
 		
 		try {
-			controller.cadastrarAresta(pontoA, pontoB, 5);
+			controller.cadastrarAresta(pontoA, pontoB, 5, pontoA.getNomeDoLocal()+pontoB.getNomeDoLocal());
 		} catch (PontoNaoExistenteException e1) {
 			e1.printStackTrace();
+		} catch (ArestaJaCadastradaException e) {
+			fail();
 		}
 		
 		try {
-			controller.cadastrarAresta(pontoA, pontoC, 7);
+			controller.cadastrarAresta(pontoA, pontoC, 7, pontoA.getNomeDoLocal()+pontoC.getNomeDoLocal());
 		} catch (PontoNaoExistenteException e) {
 			e.printStackTrace();
+		} catch (ArestaJaCadastradaException e) {
+			fail();
 		}
 		
 		Iterator<Aresta> itera = pontoA.getListaArestas().iterator();

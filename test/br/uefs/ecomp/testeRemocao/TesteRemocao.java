@@ -1,13 +1,11 @@
 package br.uefs.ecomp.testeRemocao;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Iterator;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.ArestaJaCadastradaException;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
@@ -46,13 +44,15 @@ public class TesteRemocao {
 		
 		
 		try {
-				controller.cadastrarAresta(pontoB, pontoA, 4);
-				controller.cadastrarAresta(pontoB, pontoC, 2);
-				controller.cadastrarAresta(pontoB, pontoD, 2);
-				controller.cadastrarAresta(pontoB, pontoE, 2);
+				controller.cadastrarAresta(pontoB, pontoA, 4, pontoB.getNomeDoLocal()+pontoA.getNomeDoLocal());
+				controller.cadastrarAresta(pontoB, pontoC, 2, pontoB.getNomeDoLocal()+pontoC.getNomeDoLocal());
+				controller.cadastrarAresta(pontoB, pontoD, 2, pontoB.getNomeDoLocal()+pontoD.getNomeDoLocal());
+				controller.cadastrarAresta(pontoB, pontoE, 2, pontoB.getNomeDoLocal()+pontoE.getNomeDoLocal());
 				
 		} catch (PontoNaoExistenteException e) {
 			e.printStackTrace();
+		} catch (ArestaJaCadastradaException e) {
+			fail();
 		}
 		
 		assertEquals(controller.getListaPontos().size(), 5);
@@ -91,9 +91,11 @@ public class TesteRemocao {
 		}
 		
 		try {
-			controller.cadastrarAresta(pontoA, pontoB, 5);
+			controller.cadastrarAresta(pontoA, pontoB, 5, pontoA.getNomeDoLocal()+pontoB.getNomeDoLocal());
 		} catch (PontoNaoExistenteException e1) {
 			e1.printStackTrace();
+		} catch (ArestaJaCadastradaException e) {
+			fail();
 		}
 		
 		assertEquals(pontoA.getListaArestas().size(), 1);

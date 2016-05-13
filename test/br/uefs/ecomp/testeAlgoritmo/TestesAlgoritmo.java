@@ -9,6 +9,7 @@ import java.util.Iterator;
 import org.junit.Test;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.ArestaJaCadastradaException;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
@@ -43,15 +44,17 @@ public class TestesAlgoritmo {
 		
 		//Cadastrando arestas
 		try {
-			controller.cadastrarAresta(pontoA, pontoB, 3);
-			controller.cadastrarAresta(pontoA, pontoC, 2);
-			controller.cadastrarAresta(pontoA, pontoD, 4);
-			controller.cadastrarAresta(pontoB, pontoC, 10);
-			controller.cadastrarAresta(pontoB, pontoE, 7);
-			controller.cadastrarAresta(pontoC, pontoE, 6);
-			controller.cadastrarAresta(pontoD, pontoE, 8);
-			controller.cadastrarAresta(pontoE, pontoF, 9);
+			controller.cadastrarAresta(pontoA, pontoB, 3, "AB");
+			controller.cadastrarAresta(pontoA, pontoC, 2, "AC");
+			controller.cadastrarAresta(pontoA, pontoD, 4, "AD");
+			controller.cadastrarAresta(pontoB, pontoC, 10, "BC");
+			controller.cadastrarAresta(pontoB, pontoE, 7, "BE");
+			controller.cadastrarAresta(pontoC, pontoE, 6, "CE");
+			controller.cadastrarAresta(pontoD, pontoE, 8, "DE");
+			controller.cadastrarAresta(pontoE, pontoF, 9, "EF");
 		} catch (PontoNaoExistenteException e) {
+			fail();
+		} catch (ArestaJaCadastradaException e) {
 			fail();
 		}
 		

@@ -2,7 +2,6 @@ package br.uefs.ecomp.view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
-import java.awt.Graphics;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,6 +21,7 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
+import br.uefs.ecomp.exceptions.ArestaJaCadastradaException;
 import br.uefs.ecomp.exceptions.PontoComNomeNuloException;
 import br.uefs.ecomp.exceptions.PontoJaCadastradoException;
 import br.uefs.ecomp.exceptions.PontoNaoExistenteException;
@@ -177,26 +177,60 @@ public class JanelaPrincipal extends JFrame {
 						JOptionPane.showMessageDialog(null, "Duracao do percurso nao foi inserida! Tente novamente");
 					
 					else{	
-					String nome1 = comboBox.getSelectedItem().toString();
-					String nome2 = comboBox2.getSelectedItem().toString();
-				
-					Ponto ponto1 = controller.buscarPonto(nome1);
-					Ponto ponto2 = controller.buscarPonto(nome2);
-				
-					try {
-						controller.cadastrarAresta(ponto1, ponto2, Integer.parseInt(duracaoTexto.getText()), ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
-					} catch (NumberFormatException | PontoNaoExistenteException e1) {
-						e1.printStackTrace();
-					}
+						String nome1 = comboBox.getSelectedItem().toString();
+						String nome2 = comboBox2.getSelectedItem().toString();
+						int  duracaoRecebida = Integer.parseInt(duracaoTexto.getText());
+						
+						Ponto ponto1 = controller.buscarPonto(nome1);
+						Ponto ponto2 = controller.buscarPonto(nome2);
+						
+						
 					
-					// Constroi a linha passando a coordenada dos pontos mais o raio dos mesmos
-					Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10, ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
-					aresta.setSize(getPreferredSize());
-				
-					listaLinhas.add(aresta);
+						try {
+							controller.cadastrarAresta(ponto1, ponto2, duracaoRecebida, ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
+						} catch (NumberFormatException | PontoNaoExistenteException e1) {
+							e1.printStackTrace();
+						} catch (ArestaJaCadastradaException e1){
+							JPanel painelArestaJaCadastrada = new JPanel();
+							JLabel aviso = new JLabel("Trajeto ja cadastrado. Deseja alterar duracao do trajeto para duracao informada?");
+							painelArestaJaCadastrada.add(aviso);
+							
+							// Caso queria alterar a duracao da aresta para duracao informada
+							if(JOptionPane.showConfirmDialog(null,  painelArestaJaCadastrada, "Aresta ja cadastrada!", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
+								
+								// Modifica duracao da aresta P1->P2
+								Iterator<Aresta> i = ponto1.getListaArestas().iterator();
+								Aresta aux;
+								while (i.hasNext()){
+									aux = i.next();
+									if (aux.getPontoSeguinte() == ponto2){
+										aux.setDuracao(duracaoRecebida);
+										break;
+									}
+								}
+								
+								// Modifica duracao da aresta P2->P1
+								i = ponto2.getListaArestas().iterator();
+								while (i.hasNext()) {
+									aux = i.next();
+									if (aux.getPontoSeguinte() == ponto1){ 
+										aux.setDuracao(duracaoRecebida);
+										break;
+									}
+								}
+							} else{ // Caso nao queira, se enganou. Fecha cadastro de aresta.
+								return;
+							}
+						}
+						
+						// Constroi a linha passando a coordenada dos pontos mais o raio dos mesmos
+						Linha aresta = new Linha(ponto1.getCoordX()+10, ponto1.getCoordY()+10, ponto2.getCoordX()+10, ponto2.getCoordY()+10, ponto1.getNomeDoLocal()+ponto2.getNomeDoLocal());
+						aresta.setSize(getPreferredSize());
 					
-					painelGrafo.add(aresta);
-					painelGrafo.repaint();
+						listaLinhas.add(aresta);
+						
+						painelGrafo.add(aresta);
+						painelGrafo.repaint();
 					}
 				}
 			}
@@ -283,6 +317,56 @@ public class JanelaPrincipal extends JFrame {
 		btnRemoverAresta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				
+				// Escolhe aresta a ser removida com base em seus pontos.
+				JPanel painelRemoveAresta = new JPanel();
+				
+				JLabel lblPonto1 = new JLabel("Selecione um ponto da aresta");
+				JLabel lblPonto2 = new JLabel("Selecione o outro ponto da aresta");
+				
+				JComboBox<Object> comboBox = new JComboBox<Object>(listaNomePontos.toArray());
+				JComboBox<Object> comboBox2 = new JComboBox<Object>(listaNomePontos.toArray());
+				
+				painelRemoveAresta.add(lblPonto1);
+				painelRemoveAresta.add(comboBox);
+				painelRemoveAresta.add(lblPonto2);
+				painelRemoveAresta.add(comboBox2);
+
+				String nomePonto1 = null;
+				String nomePonto2 = null;
+				
+				Ponto ponto1 = null;
+				Ponto ponto2 = null;
+				
+				if(JOptionPane.showConfirmDialog(null, painelRemoveAresta, "Remover Aresta", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
+				{
+					nomePonto1 = comboBox.getSelectedItem().toString();
+					nomePonto2 = comboBox2.getSelectedItem().toString();
+				
+					ponto1 = controller.buscarPonto(nomePonto1);
+					ponto2 = controller.buscarPonto(nomePonto2);
+				}
+				
+				
+				// Remove a aresta do sistema
+				controller.removerAresta(ponto1, ponto2);
+				
+				
+				// Remove aresta do grafo
+				Linha aux;
+				Iterator<Linha> i = listaLinhas.iterator();
+				while (i.hasNext()){
+					aux = i.next();
+					if (aux.getNome().equals(nomePonto1+nomePonto2) || aux.getNome().equals(nomePonto2+nomePonto1)){
+						listaLinhas.remove(aux);
+						painelGrafo.remove(aux);
+						break;
+					}
+				}
+				
+				// Repinta grafo
+				painelGrafo.repaint();
+				
 			}
 		});
 		
