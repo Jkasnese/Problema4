@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class Linha extends JPanel {
 
-	private static int idClasse;
+	private static int idClasse = 1;
 
 	private int x1, x2, y1, y2, id;
 	

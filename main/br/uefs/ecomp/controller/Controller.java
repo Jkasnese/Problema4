@@ -59,26 +59,27 @@ public class Controller {
 	
 	}
 	
+
 	public void removerPonto(Ponto ponto){
 		
 		Iterator<Aresta> itera = ponto.getListaArestas().iterator();
 		
 		// Percorre a lista de arestas do ponto a ser removido
 		
-		for(Aresta aresta : ponto.getListaArestas()){
+		for(int i = 0; i<ponto.getListaArestas().size(); i++){
 
 			// Encontra o ponto seguinte de cada aresta da lista e 
 			// chama o metodo de remocao de arestas, passando os vertices da
 			// aresta a ser removida
-			
+			Aresta aresta = itera.next();
 			Ponto pontoSeguinte = aresta.getPontoSeguinte();
 			removerAresta(ponto, pontoSeguinte);
-			if(itera.hasNext()){
-			itera.remove();
-			itera.next();
-			}
-			else
-				break;
+//			if(itera.hasNext()){
+//				itera.next();
+//				itera.remove();
+//			}
+//			else 
+//				break;
 		}
 		
 		listaPontos.remove(ponto);

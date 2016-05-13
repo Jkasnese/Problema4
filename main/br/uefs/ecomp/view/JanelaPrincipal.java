@@ -224,7 +224,8 @@ public class JanelaPrincipal extends JFrame {
 					
 					Ponto ponto = controller.buscarPonto(nome);
 					
-					ArrayList<Aresta> listaParaRemover = ponto.getListaArestas();
+					ArrayList<Aresta> listaParaRemover = new ArrayList<Aresta>(); 
+					listaParaRemover = ponto.getListaArestas();
 					
 					controller.removerPonto(ponto);
 					
@@ -248,14 +249,23 @@ public class JanelaPrincipal extends JFrame {
 							break;
 						}
 					}
-					
-					for(Aresta aresta : listaParaRemover){	
-						for(Linha linha : listaArestas){
+
+					Iterator<Aresta> iterAresta = listaParaRemover.iterator();
+					Iterator<Linha> iter = listaArestas.iterator();
+					for(int i = 0; i<listaParaRemover.size(); i++){
+						System.out.println("ALOU 4");
+						Aresta aresta = iterAresta.next();
+						Linha linha = iter.next();
+						
 						if(aresta.getId() == linha.getId())
-							listaArestas.remove(linha);
-							painelGrafo.remove(linha);
-					}
-		}
+								{
+									System.out.println("ALOU 5");
+									listaArestas.remove(linha);
+									painelGrafo.remove(linha);
+								}
+						}
+					
+					System.out.println("ALOU 6");
 					painelGrafo.repaint();
 				}
 			}

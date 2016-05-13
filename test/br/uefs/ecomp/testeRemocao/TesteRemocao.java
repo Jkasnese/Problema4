@@ -39,6 +39,12 @@ public class TesteRemocao {
 			e.printStackTrace();
 		}
 		
+		try {
+			controller.cadastrarAresta(pontoB, pontoA, 4);
+		} catch (PontoNaoExistenteException e) {
+			e.printStackTrace();
+		}
+		
 		assertEquals(controller.getListaPontos().size(), 3);
 		
 		controller.removerPonto(pontoB);
@@ -47,7 +53,11 @@ public class TesteRemocao {
 		
 		assertTrue(controller.getListaPontos().contains(pontoA));
 		
+		
+		
 		assertTrue(controller.getListaPontos().contains(pontoC));
+		
+		
 		
 	}
 	
