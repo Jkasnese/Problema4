@@ -10,6 +10,8 @@ import java.awt.geom.Ellipse2D;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import br.uefs.ecomp.testeCadastros.TesteCadastros;
+
 public class Circulo extends JPanel {
 
 	Ellipse2D.Double circulo;
@@ -20,7 +22,7 @@ public class Circulo extends JPanel {
 		circulo = new Ellipse2D.Double(0,0, 20, 20);
 		setOpaque(false);
 		this.coordX = x;
-		this.coordY = y;
+		this.coordY = y;		
 	}
 	
 	public Dimension getPreferredSize(){
@@ -30,11 +32,11 @@ public class Circulo extends JPanel {
 	
 	 public void paintComponent(Graphics g)
      {
+		 
          super.paintComponent(g);
          Graphics2D g2 = (Graphics2D) g;
          g2.setColor(Color.BLACK);
          g2.fill(circulo);
-
      }
 
 	public Ellipse2D.Double getCirculo() {
@@ -60,6 +62,5 @@ public class Circulo extends JPanel {
 	public void setCoordY(int coordY) {
 		this.coordY = coordY;
 	}
-
 	
 }

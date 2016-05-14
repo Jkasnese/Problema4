@@ -1,15 +1,22 @@
 package br.uefs.ecomp.view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -18,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import br.uefs.ecomp.controller.Controller;
@@ -55,6 +64,14 @@ public class JanelaPrincipal extends JFrame {
 	 * Create the frame.
 	 */
 	public JanelaPrincipal() {
+		
+		try {
+			UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException
+				| UnsupportedLookAndFeelException e2) {
+			e2.printStackTrace();
+		}
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 608, 428);
 		contentPane = new JPanel();
@@ -70,20 +87,43 @@ public class JanelaPrincipal extends JFrame {
 		painelGrafo.setBackground(SystemColor.desktop);
 		painelGrafo.setForeground(Color.BLACK);
 		
+		JPanel panelImagem = new JPanel();
+		
+		// Imagem retirada de: http://www.transvipbr.com.br/assets/img/iconCarroForte.png
+		
+		BufferedImage myPicture = null;
+		try {
+			myPicture = ImageIO.read(new File("iconCarroForte.png"));
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		JLabel imagem = new JLabel(new ImageIcon(myPicture));
+		
+		panelImagem.add(imagem);
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addComponent(painelBotoes, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 440, Short.MAX_VALUE))
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(painelBotoes, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(20)
+							.addComponent(panelImagem, GroupLayout.PREFERRED_SIZE, 124, GroupLayout.PREFERRED_SIZE)))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 426, Short.MAX_VALUE))
 		);
 		gl_contentPane.setVerticalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addComponent(painelBotoes, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 369, Short.MAX_VALUE)
-						.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE))
+					.addComponent(painelBotoes, GroupLayout.PREFERRED_SIZE, 173, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(panelImagem, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(60, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(painelGrafo, GroupLayout.DEFAULT_SIZE, 369, Short.MAX_VALUE)
 					.addGap(21))
 		);
 		GroupLayout gl_painelGrafo = new GroupLayout(painelGrafo);
@@ -97,24 +137,27 @@ public class JanelaPrincipal extends JFrame {
 		);
 		painelGrafo.setLayout(gl_painelGrafo);
 		
+		// Botao responsavel por cadastrar um ponto no grafo
 		JButton btnCadastrarPonto = new JButton("Cadastrar Ponto");
-
 		btnCadastrarPonto.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
 				JOptionPane.showMessageDialog(painelGrafo, "Clique na tela para cadastrar um ponto");
-				
+				// Indica as acoes a serem executadas caso o usuario clique na tela
 				MouseAdapter cliqueCadastro = new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {
 						
+						// Pede ao usuario que insira o nome do ponto e salva o retorno 
 						String nomeDoLocal = JOptionPane.showInputDialog("Insira o nome do ponto:");
 						boolean nomeDisponivel = false;
 						
+						// As coordenadas do ponto na telas sao salvas
 						int x = e.getX();
 						int y = e.getY();
 						
+						// Confere se o nome inserido ja foi cadastrado
 						while(!nomeDisponivel){
 							try {
 								controller.cadastrarPonto(nomeDoLocal, x, y);
@@ -129,13 +172,16 @@ public class JanelaPrincipal extends JFrame {
 						
 						// Adiciona parte grafica do ponto
 						Circulo circulo = new Circulo(x,y);
+						
+						Dimension dimensao = circulo.getPreferredSize();
+				
 						circulo.setLocation(x, y);
-						circulo.setSize(circulo.getPreferredSize());
+						circulo.setSize(dimensao);
 						painelGrafo.add(circulo);
 						listaVertices.add(circulo);
 					
 						painelGrafo.repaint();
-						
+
 						// Remove MouseListener do painel grafo, para tentar adicionar ponto com clique apos ja ter cadastrado um
 						painelGrafo.removeMouseListener(painelGrafo.getMouseListeners()[0]);
 					}
@@ -147,12 +193,15 @@ public class JanelaPrincipal extends JFrame {
 		
 		listaNomePontos.add("");
 		
+		
 		JButton btnCadastrarAresta = new JButton("Cadastrar Aresta");
 		btnCadastrarAresta.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				
 				JPanel painelCadastro = new JPanel();
+				
+				painelCadastro.setLayout(new BoxLayout(painelCadastro, BoxLayout.PAGE_AXIS));
 				
 				JLabel primeiroPonto = new JLabel("Selecione o primeiro ponto:");
 				JLabel segundoPonto = new JLabel("Selecione o segundo ponto: ");
@@ -171,6 +220,7 @@ public class JanelaPrincipal extends JFrame {
 				painelCadastro.add(duracao);
 				painelCadastro.add(duracaoTexto);
 		
+				
 				if(JOptionPane.showConfirmDialog(null, painelCadastro, "Cadastro de aresta", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
 					if(duracaoTexto.getText().equals(""))
@@ -195,7 +245,7 @@ public class JanelaPrincipal extends JFrame {
 							JLabel aviso = new JLabel("Trajeto ja cadastrado. Deseja alterar duracao do trajeto para duracao informada?");
 							painelArestaJaCadastrada.add(aviso);
 							
-							// Caso queria alterar a duracao da aresta para duracao informada
+							// Caso queira alterar a duracao da aresta para duracao informada
 							if(JOptionPane.showConfirmDialog(null,  painelArestaJaCadastrada, "Aresta ja cadastrada!", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION){
 								
 								// Modifica duracao da aresta P1->P2
@@ -251,7 +301,8 @@ public class JanelaPrincipal extends JFrame {
 								
 				painelRemocao.add(primeiroPonto);
 				painelRemocao.add(comboBox);
-				
+			
+				// Caso o usuario selecione o botao OK, armazena o valor dos dados selecionados pelo usuario
 				if(JOptionPane.showConfirmDialog(null, painelRemocao, "Remocao de ponto", JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION)
 				{
 					String nome = comboBox.getSelectedItem().toString();
@@ -380,6 +431,7 @@ public class JanelaPrincipal extends JFrame {
 				
 				// Escolhe o ponto inicial, coleta e final.
 				JPanel painelRota = new JPanel();
+				painelRota.setLayout(new BoxLayout(painelRota, BoxLayout.PAGE_AXIS));
 				
 				JLabel garagem = new JLabel("Selecione a garagem:");
 				JLabel coleta = new JLabel("Selecione o ponto de coleta: ");
@@ -445,15 +497,16 @@ public class JanelaPrincipal extends JFrame {
 		});
 		GroupLayout gl_painelBotoes = new GroupLayout(painelBotoes);
 		gl_painelBotoes.setHorizontalGroup(
-			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, gl_painelBotoes.createSequentialGroup()
-					.addGroup(gl_painelBotoes.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnCalcularRota, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-						.addComponent(btnRemoverAresta, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-						.addComponent(btnRemoverPonto, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-						.addComponent(btnCadastrarAresta, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
-						.addComponent(btnCadastrarPonto, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
-					.addGap(31))
+			gl_painelBotoes.createParallelGroup(Alignment.TRAILING)
+				.addGroup(gl_painelBotoes.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_painelBotoes.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnCadastrarPonto, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnCadastrarAresta, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnRemoverPonto, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnRemoverAresta, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE)
+						.addComponent(btnCalcularRota, GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+					.addGap(21))
 		);
 		gl_painelBotoes.setVerticalGroup(
 			gl_painelBotoes.createParallelGroup(Alignment.LEADING)
@@ -462,9 +515,9 @@ public class JanelaPrincipal extends JFrame {
 					.addComponent(btnCadastrarPonto)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnCadastrarAresta)
-					.addGap(3)
-					.addComponent(btnRemoverPonto)
 					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnRemoverPonto)
+					.addGap(3)
 					.addComponent(btnRemoverAresta)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnCalcularRota)
